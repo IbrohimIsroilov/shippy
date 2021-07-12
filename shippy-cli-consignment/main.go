@@ -33,7 +33,7 @@ func main() {
 		log.Fatal("Did not connect: %v", err)
 	}
 	defer conn.Close()
-	client := pb.NewShippingService(conn)
+	client := pb.NewShippingServiceClient(conn)
     
 	// contact the server and print out the response
 	file := defaultFileName
@@ -52,4 +52,12 @@ func main() {
 		log.Fatal("Could not greet: %v", err)
 	}
 	log.Printf("Created: %t", r.Created)
+
+	getAll, err := client.GetConsignments(context.Background(), &pb.GetRequest{})
+	if err != nil {
+		log.Fatal("Could not list consignments: %v", err)
+	}
+	for _, v := range getAll.Consignments {
+		log.Println(v)
+	}
 }
